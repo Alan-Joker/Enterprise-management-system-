@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itcast.dao.iUserDao">
+
+    <resultMap id="findByUsernames" type="UserInfo">
+        <id property="id" column="id"/>
+        <result property="phoneNum" column="phoneNum"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="username" column="username"/>
+        <result property="Status" column="Status"/>
+        <collection property="roles" ofType="Role">
+            <id property="id" column="id"/>
+            <result property="roleName" column="roleName"/>
+            <result property="roleDesc" column="roleDesc"/>
+        </collection>
+    </resultMap>
+    <select id="findByUsername" parameterType="String" resultMap="findByUsernames">
+        SELECT
+        u.*,ur.roleId,r.roleName,r.roleDesc,r.id
+        FROM users u
+        LEFT JOIN users_role ur
+        ON u.id=ur.userId
+        LEFT JOIN role r
+        ON ur.roleId=r.id
+        WHERE u.username=#{username}
+    </select>
+
+    <!--查找所有用户-->
+    <select id="findAll" resultType="UserInfo">
+        select * from users;
+    </select>
+
+    <!--保存用户信息-->
+    <insert id="save" parameterType="UserInfo">
+        insert into users(email,username,password,phoneNum,status) values (#{email},#{username},#{password},#{phoneNum},#{status})
+    </insert>
+
+    <!--根据id查询用户信息-->
+    <resultMap id="roles" type="Role" >
+        <result property="roleName" column="roleName"/>
+        <result property="roleDesc" column="roleDesc"/>
+        <collection property="permissions" ofType="Permission">
+        <result property="permissionName" column="permissionName"/>
+        <result property="url" column="url"/>
+        </collection>
+    </resultMap>
+    <resultMap id="findAllById" type="UserInfo">
+        <id property="id" column="id"/>
+        <result property="phoneNum" column="phoneNum"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="username" column="username"/>
+        <result property="Status" column="Status"/>
+        <collection property="roles" ofType="Role" resultMap="roles"/>
+
+
+    </resultMap>
+    <select id="findAllById" parameterType="int" resultMap="findAllById">
+            SELECT
+        u.*,r.roleName,r.roleDesc,p.permissionName,p.url
+        FROM users u
+        LEFT JOIN users_role ur
+        ON u.id=ur.userId
+        LEFT JOIN role r
+        ON ur.roleId=r.id
+        LEFT JOIN role_permission rp
+        ON r.id=rp.roleId
+        LEFT JOIN permission p
+        ON rp.permissionId=p.id
+        WHERE u.id=1
+    </select>
+
+</mapper>

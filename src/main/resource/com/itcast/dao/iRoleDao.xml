@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itcast.dao.iRoleDao">
+
+    <resultMap id="findById" type="Role">
+        <id property="id" column="id"/>
+        <result property="roleName" column="roleName"/>
+        <result property="roleDesc" column="roleDesc"/>
+
+        <collection property="users" ofType="UserInfo">
+            <id property="id" column="id"/>
+            <result property="phoneNum" column="phoneNum"/>
+            <result property="email" column="email"/>
+            <result property="password" column="password"/>
+            <result property="username" column="username"/>
+            <result property="Status" column="Status"/>
+        </collection>
+        <collection property="permissions" ofType="Permission">
+            <result property="permissionName" column="permissionName"/>
+            <result property="url" column="url"/>
+        </collection>
+    </resultMap>
+    <!--通过id查询用户详细信息-->
+    <select id="findById" parameterType="int" resultMap="findById">
+
+        SELECT
+        u.*,ur.roleId,r.roleName,r.roleDesc,r.id,rp.permissionId,p.permissionName,p.url
+        FROM users u
+        LEFT JOIN users_role ur
+        ON u.id=ur.userId
+        LEFT JOIN role r
+        ON ur.roleId=r.id
+        LEFT JOIN role_permission rp
+        ON r.id=rp.roleId
+        LEFT JOIN permission p
+        ON rp.permissionId=p.id
+        WHERE u.id=#{id}
+    </select>
+</mapper>

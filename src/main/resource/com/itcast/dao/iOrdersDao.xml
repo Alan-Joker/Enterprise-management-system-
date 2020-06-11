@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itcast.dao.iOrdersDao">
+
+    <resultMap id="findAll" type="Orders">
+        <id property="id" column="id"/>
+        <result property="orderNum" column="orderNum"/>
+        <result property="orderTime" column="orderTime"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="peopleCount" column="peopleCount"/>
+        <result property="payType" column="payType"/>
+        <result property="orderDesc" column="orderDesc"/>
+        <!--用于指定从表方的引用实体类型-->
+        <association property="product" javaType="Product">
+            <id property="id" column="id"/>
+            <result property="id" column="id"/>
+            <result property="productNum" column="productNum"/>
+            <result property="productName" column="productName"/>
+            <result property="cityName" column="cityName"/>
+            <result property="departureTime" column="departureTime"/>
+            <result property="productPrice" column="productPrice"/>
+            <result property="productDesc" column="productDesc"/>
+            <result property="productStatus" column="productStatus"/>
+        </association>
+    </resultMap>
+    <select id="findAll" resultMap="findAll">
+
+            SELECT
+            o.id,o.orderNum,o.orderTime,o.orderStatus,p.productName,p.productPrice
+            FROM
+            orders o,product p
+            WHERE o.productId = p.id
+    </select>
+
+    <!--通过id查询订单详细信息-->
+    <resultMap id="findById" type="Orders">
+        <id property="id" column="id"/>
+        <result property="orderNum" column="orderNum"/>
+        <result property="orderTime" column="orderTime"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="peopleCount" column="peopleCount"/>
+        <result property="payType" column="payType"/>
+        <result property="orderDesc" column="orderDesc"/>
+        <!--用于指定从表方的引用实体类型-->
+        <association property="product" javaType="Product">
+            <id property="id" column="id"/>
+            <result property="id" column="id"/>
+            <result property="productNum" column="productNum"/>
+            <result property="productName" column="productName"/>
+            <result property="cityName" column="cityName"/>
+            <result property="departureTime" column="departureTime"/>
+            <result property="productPrice" column="productPrice"/>
+            <result property="productDesc" column="productDesc"/>
+            <result property="productStatus" column="productStatus"/>
+        </association>
+        <association property="member" javaType="Member">
+            <id property="id" column="id"/>
+            <result property="email" column="email"/>
+            <result property="name" column="name"/>
+            <result property="nickname" column="nickname"/>
+            <result property="phoneNum" column="phoneNum"/>
+        </association>
+        <collection property="travellers" ofType="Traveller">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="sex" column="sex"/>
+            <result property="phoneNum" column="phoneNum"/>
+            <result property="credentialsType" column="credentialsType"/>
+            <result property="credentialsNum" column="credentialsNum"/>
+            <result property="travellerType" column="travellerType"/>
+        </collection>
+    </resultMap>
+    <select id="findById" parameterType="int" resultMap="findById">
+        SELECT
+        o.id,o.orderNum,o.orderTime,o.orderStatus,p.productName,
+        p.productPrice,m.email,m.name,m.nickName,m.phoneNum,t.name,
+        t.sex,t.phoneNum,t.credentialsType,t.credentialsNum,t.travellerType,t.id
+        FROM
+        orders o,product p,members m,traveller t
+        WHERE o.productId = p.id AND o.memberId=m.id AND o.id=1 AND t.id IN
+        (SELECT travellerId FROM order_traveller WHERE orderId=#{id} )
+    </select>
+</mapper>
