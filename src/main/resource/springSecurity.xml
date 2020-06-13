@@ -9,6 +9,7 @@
 
     <!--权限控制-->
     <security:global-method-security secured-annotations="enabled"/>
+
     <!-- 配置不拦截的资源 -->
     <security:http pattern="/login.jsp" security="none"/>
     <security:http pattern="/failer.jsp" security="none"/>

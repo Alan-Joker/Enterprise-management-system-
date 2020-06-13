@@ -37,4 +37,15 @@
         ON rp.permissionId=p.id
         WHERE u.id=#{id}
     </select>
+
+    <!--查询所有角色信息-->
+    <select id="findAll" resultType="Role">
+        select * from role
+    </select>
+
+    <!--保存角色信息-->
+    <insert id="save" parameterType="String">
+
+        insert into role(roleName,roleDesc) values(#{param1},#{param2})
+    </insert>
 </mapper>
