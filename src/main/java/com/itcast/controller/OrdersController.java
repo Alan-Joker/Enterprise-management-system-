@@ -18,7 +18,6 @@ public class OrdersController {
     @Autowired
     private iOrdersService service;
 
-    @Secured("ROLE_ADMIN")
     @RequestMapping("/findAll")
     public ModelAndView findAll(Integer page,Integer size){
 

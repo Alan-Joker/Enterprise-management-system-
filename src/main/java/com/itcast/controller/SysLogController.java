@@ -1,5 +1,6 @@
 package com.itcast.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.itcast.domain.SysLog;
 import com.itcast.service.iSysLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,16 @@ public class SysLogController {
     private iSysLogService sysLogService;
 
     @RequestMapping("/findAll")
-    public ModelAndView findAll(){
+    public ModelAndView findAll(Integer page,Integer size) throws Exception {
+        ModelAndView mv = new ModelAndView();
 
-        ModelAndView mv=new ModelAndView();
+        List<SysLog> sysLogs = sysLogService.findAll(page, size);
 
-       List<SysLog> sysLogs= sysLogService.findAll();
-       mv.addObject("sysLogs",sysLogs);
-       mv.setViewName("syslog-list");
+        PageInfo pageInfo = new PageInfo(sysLogs);
+
+        mv.addObject("sysLogs", pageInfo);
+
+        mv.setViewName("syslog-list");
         return mv;
     }
 }

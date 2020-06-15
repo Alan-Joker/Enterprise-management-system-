@@ -1,5 +1,6 @@
 package com.itcast.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.itcast.dao.iSysLogDao;
 import com.itcast.domain.SysLog;
 import com.itcast.service.iSysLogService;
@@ -21,8 +22,9 @@ public class iSysLogServiceImpl implements iSysLogService {
     }
 
     @Override
-    public List<SysLog> findAll() {
+    public List<SysLog> findAll(int page,int size) throws Exception {
 
+        PageHelper.startPage(page,size);
         return dao.findAll();
     }
 }

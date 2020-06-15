@@ -10,6 +10,6 @@
 
     <!--查询所有-->
     <select id="findAll" resultType="SysLog">
-        select * from syslog;
+        select * from syslog
     </select>
 </mapper>
